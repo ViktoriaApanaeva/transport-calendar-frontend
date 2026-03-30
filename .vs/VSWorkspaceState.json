@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\public",
+    "\\src",
+    "\\src\\components",
+    "\\src\\router",
+    "\\src\\stores",
+    "\\src\\views"
+  ],
+  "SelectedNode": "\\src\\components\\ CalendarComponent.vue",
+  "PreviewInSolutionExplorer": false
+}
