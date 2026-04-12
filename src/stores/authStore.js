@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || ''
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
@@ -31,14 +33,15 @@ export const useAuthStore = defineStore('auth', {
     
     async login(credentials) {
       try {
-        const response = await axios.post('/api/account/login', credentials)
+        const response = await axios.post(`${API_URL}/api/account/login`, credentials)
         if (response.data.success) {
           this.setAuth(response.data.token, response.data.user)
           return { success: true }
         }
         return { success: false, error: response.data.message }
       } catch (error) {
-        return { success: false, error: error.response?.data?.message || 'Ошибка входа' }
+        console.error('Login error:', error)
+        return { success: false, error: error.response?.data?.message || 'Ошибка подключения к серверу' }
       }
     },
     

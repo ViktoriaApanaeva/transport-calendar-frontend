@@ -8,12 +8,6 @@ const routes = [
     component: () => import('../views/LoginView.vue'),
     meta: { requiresGuest: true }
   },
-  // {
-  //   path: '/profile',
-  //   name: 'Profile',
-  //   component: () => import('../views/ProfileView.vue'),
-  //   meta: { requiresAuth: true }
-  // },
   {
     path: '/calendar',
     name: 'Calendar',

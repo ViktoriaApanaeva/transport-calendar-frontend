@@ -41,9 +41,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { useAuthStore } from '../stores/authStore'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
@@ -53,30 +54,15 @@ const handleLogin = async () => {
   loading.value = true
   error.value = ''
   
-  try {
-    const response = await axios.post('/api/account/login', {
-      email: email.value,
-      password: password.value
-    })
-    
-    if (response.data.success) {
-      // Сохраняем данные пользователя
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('user', JSON.stringify(response.data.user))
-      
-      // Устанавливаем заголовок для всех будущих запросов
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
-      
-      // Перенаправляем на календарь
-      router.push('/calendar')
-    } else {
-      error.value = response.data.message || 'Ошибка входа'
-    }
-  } catch (err) {
-    error.value = err.response?.data?.message || 'Ошибка подключения к серверу'
-  } finally {
-    loading.value = false
+  const result = await authStore.login({ email: email.value, password: password.value })
+  
+  if (result.success) {
+    router.push('/calendar')
+  } else {
+    error.value = result.error || 'Ошибка входа'
   }
+  
+  loading.value = false
 }
 </script>
 
