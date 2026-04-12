@@ -19,7 +19,7 @@ export const useCalendarStore = defineStore('calendar', {
         this.events = response.data
         return this.events
       } catch (error) {
-        console.error('Ошибка загрузки:', error)
+        console.error('РћС€РёР±РєР°:', error)
         return []
       } finally {
         this.loading = false

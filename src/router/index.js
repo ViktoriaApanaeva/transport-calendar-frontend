@@ -1,16 +1,47 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CalendarView from '../views/CalendarView.vue'
+import { useAuthStore } from '../stores/authStore'
 
 const routes = [
-  { path: '/', redirect: '/calendar' },
-  { path: '/calendar', component: CalendarView },
-  { path: '/about', component: () => import('../views/AboutView.vue') },
-  { path: '/help', component: () => import('../views/HelpView.vue') }
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/LoginView.vue'),
+    meta: { requiresGuest: true }
+  },
+  // {
+  //   path: '/profile',
+  //   name: 'Profile',
+  //   component: () => import('../views/ProfileView.vue'),
+  //   meta: { requiresAuth: true }
+  // },
+  {
+    path: '/calendar',
+    name: 'Calendar',
+    component: () => import('../views/CalendarView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/',
+    redirect: '/calendar'
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+// Защита маршрутов
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next('/login')
+  } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
+    next('/calendar')
+  } else {
+    next()
+  }
 })
 
 export default router
